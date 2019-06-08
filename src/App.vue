@@ -1,0 +1,99 @@
+<template lang="pug">
+  #app
+    pm-header
+    pm-loader(v-show="isLoading")
+    section.section(v-show="!isLoading")
+      nav.nav
+        .container
+          input.input.is-large(
+            v-model="searchQuery",
+            type="text",
+            placeholder="Search songs")
+
+          a.button.is-info.is-large(v-on:click="search") search
+          a.button.is-danger.is-large &times;
+
+      .conatiner
+          p
+            small {{searchMessage}}
+
+      .container.result
+        .columns.is-multiline
+          .column.is-one-quarter(v-for="t in tracks")
+            pm-track(
+            v-bind:class="{'is-active': t.id == selectedTrack}",
+            v-bind:track="t",
+            v-on:select="setSelectedTrack")
+
+
+
+    pm-footer
+</template>
+
+<script>
+import trackService from '@/services/track';
+import PmFooter from '@/components/layout/Footer.vue';
+import PmHeader from '@/components/layout/Header.vue';
+import PmTrack from '@/components/Track.vue';
+import PmLoader from '@/components/shared/Loader.vue';
+
+
+
+
+export default {
+  name: 'app',
+  data () {
+    return {
+        searchQuery:'',
+        tracks:[],
+        isLoading:false,
+        selectedTrack:''
+    }
+  },
+
+  components:{
+      PmFooter,
+      PmHeader,
+      PmTrack,
+      PmLoader
+  },
+
+  methods:{
+    search(){
+        if(this.searchQuery.length < 2){
+            return false;
+        }
+
+        this.isLoading = true;
+        trackService.search(this.searchQuery)
+            .then((res)=>{
+                this.tracks = res.tracks.items;
+                this.isLoading = false;
+            })
+    },
+    setSelectedTrack(id){
+        this.selectedTrack = id;
+    }
+  },
+  computed:{
+      searchMessage(){
+          return `Found ${this.tracks.length}`;
+      }
+  }
+
+
+}
+</script>
+
+<style lang="scss">
+@import "./scss/main";
+
+.result{
+    margin-top:50px;
+}
+
+.is-active{
+    border: 3px solid #23d160;
+}
+
+</style>
