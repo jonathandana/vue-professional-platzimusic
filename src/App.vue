@@ -1,6 +1,10 @@
 <template lang="pug">
   #app
     pm-header
+
+    pm-notification(v-show="showNotification")
+        p(slot="body") Not Found Result.
+
     pm-loader(v-show="isLoading")
     section.section(v-show="!isLoading")
       nav.nav
@@ -13,7 +17,7 @@
           a.button.is-info.is-large(v-on:click="search") search
           a.button.is-danger.is-large &times;
 
-      .conatiner
+      .container
           p
             small {{searchMessage}}
 
@@ -32,10 +36,14 @@
 
 <script>
 import trackService from '@/services/track';
+
 import PmFooter from '@/components/layout/Footer.vue';
 import PmHeader from '@/components/layout/Header.vue';
+
 import PmTrack from '@/components/Track.vue';
+
 import PmLoader from '@/components/shared/Loader.vue';
+import PmNotification from "@/components/shared/Notification.vue"
 
 
 
@@ -47,7 +55,8 @@ export default {
         searchQuery:'',
         tracks:[],
         isLoading:false,
-        selectedTrack:''
+        selectedTrack:'',
+        showNotification:false
     }
   },
 
@@ -55,7 +64,8 @@ export default {
       PmFooter,
       PmHeader,
       PmTrack,
-      PmLoader
+      PmLoader,
+      PmNotification
   },
 
   methods:{
@@ -67,6 +77,9 @@ export default {
         this.isLoading = true;
         trackService.search(this.searchQuery)
             .then((res)=>{
+
+                this.showNotification = res.tracks.total === 0;
+
                 this.tracks = res.tracks.items;
                 this.isLoading = false;
             })
@@ -78,6 +91,16 @@ export default {
   computed:{
       searchMessage(){
           return `Found ${this.tracks.length}`;
+      }
+  },
+
+  watch:{
+      showNotification(){
+          if(this.showNotification){
+              setTimeout(()=>{
+                  this.showNotification = false;
+              },3000)
+          }
       }
   }
 
