@@ -12,4 +12,8 @@ trackService.search = (q)=>{
     }).then(result => result.data)
 };
 
+trackService.getById = (id)=>{
+    return platziMusicService.get(`/tracks/${id}`).then(res => res.data);
+};
+
 export default trackService;
