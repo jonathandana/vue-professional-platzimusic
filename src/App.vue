@@ -2,8 +2,11 @@
   #app
     pm-header
 
-    pm-notification(v-show="showNotification")
-        p(slot="body") Not Found Result.
+    pm-notification(
+        v-show="showNotification",
+        v-bind:type_message="notificationData.class_css")
+
+        p(slot="body") {{notificationData.message}}
 
     pm-loader(v-show="isLoading")
     section.section(v-show="!isLoading")
@@ -56,7 +59,12 @@ export default {
         tracks:[],
         isLoading:false,
         selectedTrack:'',
-        showNotification:false
+        showNotification:false,
+        notificationData:{
+            class_css : '',
+            message   : ''
+        }
+
     }
   },
 
@@ -78,8 +86,15 @@ export default {
         trackService.search(this.searchQuery)
             .then((res)=>{
 
-                this.showNotification = res.tracks.total === 0;
+                if(res.tracks.total !== 0){
+                    this.notificationData.class_css = 'is-success';
+                    this.notificationData.message = `found ${res.tracks.total} total`;
+                }else{
+                    this.notificationData.class_css = 'is-danger';
+                    this.notificationData.message = `Not Found Result.`;
+                }
 
+                this.showNotification = true;
                 this.tracks = res.tracks.items;
                 this.isLoading = false;
             })
@@ -97,6 +112,7 @@ export default {
   watch:{
       showNotification(){
           if(this.showNotification){
+              if(this.notificationData.class_css === 'is-success') return;
               setTimeout(()=>{
                   this.showNotification = false;
               },3000)

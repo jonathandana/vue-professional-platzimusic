@@ -36,8 +36,9 @@
         },
         methods:{
             selectTrack(){
-                console.log(this);
-                this.$emit('select',this.track.id)
+                this.$emit('select',this.track.id);
+                this.$bus.$emit('set-track',this.track)
+
             },
         }
     };
