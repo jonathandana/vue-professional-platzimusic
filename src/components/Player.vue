@@ -1,7 +1,8 @@
 <template lang="pug">
-    .content
+    .content(v-if="track && track.album")
         p.is-128x128
             img(v-bind:src="track.album.images[0].url")
+
         p
             strong {{track.name}}
             small [{{track.duration_ms}}]
@@ -16,7 +17,8 @@
 
         data(){
             return{
-                track:{}
+                track:{},
+
             }
         },
         created(){
