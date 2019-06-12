@@ -13,6 +13,7 @@
         .container
           input.input.is-large(
             v-model="searchQuery",
+            v-on:keyup.enter="search",
             type="text",
             placeholder="Search songs")
 
