@@ -40,11 +40,18 @@ is-128x128
         },
         methods:{
             selectTrack(){
+                if(!this.track.preview_url){
+                    return false;
+                }
                 this.$emit('select',this.track.id);
                 this.$bus.$emit('set-track',this.track)
             },
 
             GoToTrack(id){
+                if(!this.track.preview_url){
+                    return false;
+                }
+
                 this.$router.push({
                     name:'track',
                     params:{id}
