@@ -28,10 +28,11 @@
 
 
 </template>
-is-128x128
 <script>
     import msToMm from '@/filters/ms-to-mm';
+    import trackMixin from '@/mixins/track';
     export default {
+        mixins:[trackMixin],
         props:{
             track:{
                 type:Object,
@@ -39,13 +40,7 @@ is-128x128
             }
         },
         methods:{
-            selectTrack(){
-                if(!this.track.preview_url){
-                    return false;
-                }
-                this.$emit('select',this.track.id);
-                this.$bus.$emit('set-track',this.track)
-            },
+
 
             GoToTrack(id){
                 if(!this.track.preview_url){
