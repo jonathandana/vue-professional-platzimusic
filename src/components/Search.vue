@@ -1,13 +1,13 @@
 <template lang="pug">
   main
 
-    pm-notification(
-        v-show="showNotification",
-        v-bind:type_message="notificationData.class_css")
-
-        p(slot="body") {{notificationData.message}}
-
-    pm-loader(v-show="isLoading")
+    transition(name="move")
+        pm-notification(
+            v-show="showNotification",
+            v-bind:type_message="notificationData.class_css")
+            p(slot="body") {{notificationData.message}}
+    transition(name="move")
+        pm-loader(v-show="isLoading")
     section.section(v-show="!isLoading")
       nav.nav
         .container
